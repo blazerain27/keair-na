@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blitz Blasters: Adventure</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #111;
+      color: #0ff;
+      text-align: center;
+      padding: 30px;
+      background-image: url('neon-city.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    #game-box {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #0ff;
+      padding: 20px;
+      border-radius: 15px;
+      display: inline-block;
+      max-width: 600px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #0ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00aaff;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-box">
+    <h1>🌌 Blitz Blasters: Adventure Mode</h1>
+    <div id="game-content">
+      <p>Select your Brawler:</p>
+      <button onclick="selectBrawler('Blitz')">Blitz</button>
+      <button onclick="selectBrawler('Tempra')">Tempra</button>
+      <button onclick="selectBrawler('Tankz')">Tankz</button>
+      <button onclick="selectBrawler('Glitch')">Glitch</button>
+    </div>
+  </div>
+
+  <script>
+    let brawler = "";
+    let stage = 0;
+    const story = [
+      "You spawn in Junkyard City.",
+      "Raiders attack from the shadows!",
+      "You charge up your special attack...",
+      "You defeated the raiders and looted +200 coins!",
+      "You ascend to Sky Spires and prepare for the next challenge."
+    ];
+
+    function selectBrawler(name) {
+      brawler = name;
+      document.getElementById("game-content").innerHTML = `
+        <p>You selected <strong>${brawler}</strong>!</p>
+        <p>${story[0]}</p>
+        <button onclick="nextStory()">Continue</button>
+      `;
+    }
+
+    function nextStory() {
+      stage++;
+      if (stage < story.length) {
+        document.getElementById("game-content").innerHTML = `
+          <p>${story[stage]}</p>
+          <button onclick="nextStory()">Continue</button>
+        `;
+        if (stage === 1) {
+          document.getElementById("game-content").innerHTML += `
+            <br><button onclick="choose('Attack')">Attack</button>
+            <button onclick="choose('Defend')">Defend</button>
+          `;
+        }
+      } else {
+        document.getElementById("game-content").innerHTML = `
+          <p>🎉 Adventure complete with ${brawler}!</p>
+          <p>You are now a legend of Neon Vortex.</p>
+        `;
+      }
+    }
+
+    function choose(action) {
+      let result = action === "Attack"
+        ? "⚡ You landed a critical hit!"
+        : "🛡️ You blocked the incoming fire!";
+      document.getElementById("game-content").innerHTML += `<p>${result}</p>`;
+    }
+  </script>
+</body>
+</html>
+
