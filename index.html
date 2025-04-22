@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blitz Blasters: 3D Adventure</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #000010;
+      color: #0ff;
+      text-align: center;
+      padding: 40px;
+    }
+    #game-box {
+      background: rgba(0, 0, 20, 0.85);
+      border: 2px solid #0ff;
+      padding: 30px;
+      border-radius: 15px;
+      display: inline-block;
+      max-width: 700px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #0ff;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00ccff;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-box">
+    <h1>🚀 Blitz Blasters: 3D Adventure</h1>
+    <div id="stats"></div>
+    <div id="game-content">
+      <p>Choose your Brawler:</p>
+      <button onclick="selectBrawler('Blitz')">Blitz</button>
+      <button onclick="selectBrawler('Tempra')">Tempra</button>
+      <button onclick="selectBrawler('Tankz')">Tankz</button>
+      <button onclick="selectBrawler('Glitch')">Glitch</button>
+    </div>
+  </div>
+
+  <script>
+    let brawler = "";
+    let stage = 0;
+    let player = {
+      health: 100,
+      power: 10,
+      speed: 5,
+      coins: 0,
+      inventory: []
+    };
+
+    const story = [
+      "You spawn in Junkyard City. The neon sky flickers.",
+      "A group of raiders spot you! Prepare to defend yourself.",
+      "Using your gadget, you unleash a devastating counterstrike.",
+      "Victory! You found a loot crate with 300 coins and an Upgrade Core.",
+      "You board a glider and arrive at the floating Sky Spires.",
+      "Storm Mechs attack from above!",
+      "You activate your super to break through the clouds!",
+      "You defeat the mechs and claim 1 Mystic Star. The path opens to Core Complex.",
+      "Inside the Core Complex, lasers and shadows twist around you.",
+      "The AI Overlord, Coremind X, activates!",
+      "Epic boss battle begins!"
+    ];
+
+    function updateStats() {
+      document.getElementById("stats").innerHTML = `
+        <p>❤️ Health: ${player.health} | 💥 Power: ${player.power} | ⚡ Speed: ${player.speed} | 💰 Coins: ${player.coins}</p>
+      `;
+    }
+
+    function selectBrawler(name) {
+      brawler = name;
+      document.getElementById("game-content").innerHTML = `
+        <p>You selected <strong>${brawler}</strong>!</p>
+        <p>${story[0]}</p>
+        <button onclick="nextStory()">Continue</button>
+      `;
+      updateStats();
+    }
+
+    function nextStory() {
+      stage++;
+      if (stage < story.length) {
+        document.getElementById("game-content").innerHTML = `
+          <p>${story[stage]}</p>
+          <button onclick="nextStory()">Continue</button>
+        `;
+
+        // Key moments
+        if (stage === 1 || stage === 5) {
+          document.getElementById("game-content").innerHTML += `
+            <br><button onclick="choose('Attack')">Attack</button>
+            <button onclick="choose('Dodge')">Dodge</button>
+          `;
+        }
+        if (stage === 3) {
+          player.coins += 300;
+          player.inventory.push("Upgrade Core");
+          setTimeout(() => offerUpgrade(), 500);
+        }
+        if (stage === 7) {
+          player.coins += 100;
+          player.inventory.push("Mystic Star");
+        }
+        if (stage === 10) {
+          document.getElementById("game-content").innerHTML += `
+            <p>👑 Final Boss Fight Engaged!</p>
+            <button onclick="bossFight()">Fight!</button>
+          `;
+        }
+
+      } else {
+        document.getElementById("game-content").innerHTML = `
+          <p>🎉 Adventure completed with ${brawler}!</p>
+          <p>You saved the Neon Vortex and earned ${player.coins} coins!</p>
+        `;
+      }
+      updateStats();
+    }
+
+    function choose(action) {
+      let result = action === "Attack"
+        ? "⚔️ You landed a critical hit!"
+        : "🌀 You dodged the ambush!";
+      player.health -= (action === "Attack" ? 7 : 3);
+      document.getElementById("game-content").innerHTML += `<p>${result}</p>`;
+      updateStats();
+    }
+
+    function offerUpgrade() {
+      document.getElementById("game-content").innerHTML += `
+        <p>🔧 Upgrade unlocked! Choose one:</p>
+        <button onclick="upgrade('health')">+25 Health</button>
+        <button onclick="upgrade('power')">+6 Power</button>
+        <button onclick="upgrade('speed')">+4 Speed</button>
+      `;
+    }
+
+    function upgrade(type) {
+      if (type === "health") player.health += 25;
+      if (type === "power") player.power += 6;
+      if (type === "speed") player.speed += 4;
+      document.getElementById("game-content").innerHTML += `<p>✅ Upgrade successful!</p>`;
+      updateStats();
+    }
+
+    function bossFight() {
+      let win = player.power >= 16 && player.health > 30;
+      if (win) {
+        document.getElementById("game-content").innerHTML = `
+          <p>🔥 You defeated Coremind X with your might!</p>
+          <p>🏆 You win the adventure with ${brawler}!</p>
+        `;
+      } else {
+        document.getElementById("game-content").innerHTML = `
+          <p>💀 Coremind X was too strong this time...</p>
+          <p>Try again with more upgrades next round!</p>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
+
